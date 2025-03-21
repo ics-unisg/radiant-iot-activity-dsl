@@ -4,10 +4,11 @@
 Follow the steps below to get started writing and deploying Radiant. Note that the published VSCode extension and NeoVim integration are not available in this anonymized repository during peer-review.
 
 ### 1. Install Extension Locally
-First, for this demo usage you need to open this repository in VSCode. Then, to use the extension locally in development mode follow the steps below:
+First, for this demo usage you need to open this repository in VSCode. Furthermore, you need to have Node.js installed. Then, to use the extension locally in development mode follow the steps below:
 
 ```bash
 cd radiant
+npm install
 npm run langium:generate
 npm run build
 ```
