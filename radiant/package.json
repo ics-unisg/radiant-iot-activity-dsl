@@ -1,6 +1,6 @@
 {
   "name": "radiant",
-  "description": "A DSL for activity detection in IoT",
+  "description": "A DSL for activity detection in CPS",
   "version": "1.0.1",
   "repository": "https://anon.com",
   "publisher": "anon",

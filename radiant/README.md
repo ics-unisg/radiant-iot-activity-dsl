@@ -1,7 +1,5 @@
 # Radiant
-Radiant is a Domain Specific Language [DSL] for monitoring and activity detection, especially in an IoT environment. This extension provides the complete set of tooling around the DSL including LSP, code generation and direct deployment to a Siddhi runner.
-
-This project was born as part of a research project at the University of St. Gallen and is currently still under development.
+Radiant is a Domain Specific Language [DSL] for monitoring and activity detection, especially in an CPS environment. This extension provides the complete set of tooling around the DSL including LSP, code generation and direct deployment to a Siddhi runner.
 
 ## Commands
 
