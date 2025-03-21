@@ -1,0 +1,107 @@
+Process Factory:
+    Activity OV_Burn:
+        Start:
+            In OV_1 sensor ov1_m1_speed changes_from off to low;
+        End:
+            In OV_1 sensor ov1_i2_pos_switch changes_from on to off;
+    Activity Pickup_and_transport_to_Oven:
+        Start:
+            In VGR_1 sensor vgr1_i2_pos_switch changes_from off to on;
+            In VGR_1 sensor vgr1_m3_speed changes_from off to high;
+            In VGR_1 sensor vgr1_target_pos_y changes_from two to one;
+            In VGR_1 sensor vgr1_target_pos_z changes_from four to one;
+        Intermediate:
+            In VGR_1 sensor vgr1_i2_pos_switch changes_from on to off;
+            In VGR_1 sensor vgr1_m2_speed changes_from off to low;
+            In VGR_1 sensor vgr1_m3_speed changes_from low to off;
+            In VGR_1 sensor vgr1_target_pos_z changes_from one to six;
+        End:
+            In VGR_1 sensor vgr1_i1_pos_switch changes_from off to on;
+            In VGR_1 sensor vgr1_m1_speed changes_from high to off;
+    
+    Activity Unload_from_HBW:
+        Start:
+            In HBW_1 sensor hbw1_i5_pos_switch changes_from on to off;
+            In HBW_1 sensor hbw1_m2_speed changes_from off to low;
+        End:
+            In HBW_1 sensor hbw1_i6_pos_switch changes_from off to on;
+            In HBW_1 sensor hbw1_m3_speed changes_from high to off;
+    
+    Activity Calibrate_HBW:
+        Start:
+            In HBW_1 sensor hbw1_target_pos_x changes_from five to one;
+        Intermediate:
+            In HBW_1 sensor hbw1_current_pos_x changes_from four to three;
+        End:
+            In HBW_1 sensor hbw1_m2_speed changes_from high to off;
+    
+    Activity Calibrate_VGR:
+        Start:
+            In VGR_1 sensor vgr1_target_pos_x changes_from five to one;
+        Intermediate:
+            In VGR_1 sensor vgr1_current_pos_x changes_from four to three;
+        End:
+            In VGR_1 sensor vgr1_m1_speed changes_from high to off;
+    
+    Activity Pickup_and_transport_to_sink:
+        Start:
+            Case:
+                In VGR_1 sensor vgr1_target_pos_x changes_from one to three;
+            Case:
+                In VGR_1 sensor vgr1_target_pos_x changes_from one to four;
+        End:
+            In VGR_1 sensor vgr1_i4_light_barrier changes_from on to off;
+
+    Activity Sorting_Machine_sort:
+        Start:
+            In SM_1 sensor sm1_m1_speed changes_from off to low;
+        End:
+            Case:
+                In SM_1 sensor sm1_i6_light_barrier changes_from on to off;
+            Case:
+                In SM_1 sensor sm1_i7_light_barrier changes_from on to off;
+            Case:
+                In SM_1 sensor sm1_i8_light_barrier changes_from on to off;
+    
+    Activity WT_Transport:
+        Start:
+            In WT_1 sensor wt1_m2_speed changes_from off to low;
+        Intermediate:
+            In WT_1 sensor wt1_i3_pos_switch changes_from off to on;
+        Intermediate:
+            In WT_1 sensor wt1_i3_pos_switch changes_from on to off;
+        End:
+            In WT_1 sensor wt1_m2_speed changes_from high to off;
+    Activity Start_Milling_Machine:
+        Start:
+            In MM_1 sensor mm1_o8_compressor changes_from off to high;
+        Intermediate:
+            In MM_1 sensor mm1_i3_pos_switch changes_from on to off;
+        End:
+            In MM_1 sensor mm1_m1_speed changes_from high to off;
+    
+    Activity Move_to_DPS:
+        Start:
+            In VGR_1 sensor vgr1_m1_speed changes_from off to low;
+        Intermediate:
+            In VGR_1 sensor vgr1_current_pos_x changes_from two to three;
+        End:
+            In VGR_1 sensor vgr1_target_pos_x changes_from three to five;
+
+    Activity Get_Workpiece_from_Pickup_Station:
+       Start:
+            In VGR_1 sensor vgr1_i2_pos_switch changes_from on to off;
+            In VGR_1 sensor vgr1_i3_pos_switch changes_from on to off;
+            In VGR_1 sensor vgr1_target_pos_x changes_from one to two;
+            In VGR_1 sensor vgr1_target_pos_z changes_from one to two;
+        End:
+            In VGR_1 sensor vgr1_i2_pos_switch changes_from off to on;
+            In VGR_1 sensor vgr1_i3_pos_switch changes_from off to on;
+            In VGR_1 sensor vgr1_target_pos_z changes_from three to one;
+
+    Activity Store_Workpiece_in_HBW:
+        Start:
+            In HBW_1 sensor hbw1_i5_pos_switch changes_from on to off;
+            In HBW_1 sensor hbw1_m2_speed changes_from off to low;
+        End:
+            In HBW_1 sensor hbw1_m2_speed changes_from high to off;

@@ -1,0 +1,377 @@
+generator:
+  type: siddhi
+  patterns_sink:
+    type: mqtt
+    url: ${MQTT_URL}
+    topic: Radiant/Patterns
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+
+sources:
+  - id: VGR_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.VGR_1
+    topic: FTFactory/VGR_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      vgr1_current_pos_x: float
+      vgr1_current_pos_y: float
+      vgr1_current_pos_z: float
+      vgr1_i1_pos_switch: int
+      vgr1_i2_pos_switch: int
+      vgr1_i3_pos_switch: int
+      vgr1_i4_light_barrier: int
+      vgr1_i7_light_barrier: int
+      vgr1_i8_color_sensor: int
+      vgr1_m1_speed: int
+      vgr1_m2_speed: int
+      vgr1_m3_speed: int
+      vgr1_o7_compressor: int
+      vgr1_o8_valve: int
+      vgr1_target_pos_x: float
+      vgr1_target_pos_y: float
+      vgr1_target_pos_z: float
+  - id: OV_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.OV_1
+    topic: FTFactory/OV_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      ov1_i1_pos_switch: int
+      ov1_i2_pos_switch: int
+      ov1_i5_light_barrier: int
+      ov1_m1_speed: int
+      ov1_o7_valve: int
+      ov1_o8_compressor: int
+  - id: HBW_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.HBW_1
+    topic: FTFactory/HBW_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      hbw1_current_pos_x: float
+      hbw1_current_pos_y: float
+      hbw1_i1_light_barrier: int
+      hbw1_i2_light_barrier: int
+      hbw1_i3_light_barrier: int
+      hbw1_i4_light_barrier: int
+      hbw1_i5_pos_switch: int
+      hbw1_i6_pos_switch: int
+      hbw1_i7_pos_switch: int
+      hbw1_i8_pos_switch: int
+      hbw1_m1_speed: int
+      hbw1_m2_speed: int
+      hbw1_m3_speed: int
+      hbw1_m4_speed: int
+      hbw1_target_pos_x: float
+      hbw1_target_pos_y: float
+  - id: SM_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.SM_1
+    topic: FTFactory/SM_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      sm1_i1_light_barrier: int
+      sm1_i2_color_sensor: int
+      sm1_i3_light_barrier: int
+      sm1_i6_light_barrier: int
+      sm1_i7_light_barrier: int
+      sm1_i8_light_barrier: int
+      sm1_m1_speed: int
+      sm1_o5_valve: int
+      sm1_o6_valve: int
+      sm1_o7_valve: int
+      sm1_o8_compressor: int
+  - id: WT_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.WT_1
+    topic: FTFactory/WT_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      wt1_i3_pos_switch: int
+      wt1_i4_pos_switch: int
+      wt1_m2_speed: int
+      wt1_o5_valve: int
+      wt1_o6_valve: int
+      wt1_o8_compressor: int
+  - id: MM_1Stream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.MM_1
+    topic: FTFactory/MM_1
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      mm1_i1_pos_switch: int
+      mm1_i2_pos_switch: int
+      mm1_i3_pos_switch: int
+      mm1_i4_light_barrier: int
+      mm1_m1_speed: int
+      mm1_m2_speed: int
+      mm1_m3_speed: int
+      mm1_o7_valve: int
+      mm1_o8_compressor: int
+
+sink:
+  type: mqtt
+  url: ${MQTT_URL}
+  base_topic: RadiantBase
+  username: ${MQTT_USER}
+  password: ${MQTT_PASSWORD}
+  content_type: json-xes
+
+presets:
+  - id: fiveonetwopreset
+    min_value: -512
+    max_value: 512
+    states:
+      low: -512
+      off: 0
+      high: 512
+
+stations:
+  - id: VGR_1
+    name: VGR 1
+    source: VGR_1Stream
+    sensors:
+      - id: vgr1_current_pos_x
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 45, "two"],
+            [45, 190, "three"],
+            [190, 360, "four"]
+          ]
+          upper: [360, "five"]
+      - id: vgr1_current_pos_y
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 10, "two"],
+            [10, 50, "three"],
+            [50, 90, "four"]
+          ]
+          upper: [90, "five"]
+      - id: vgr1_current_pos_z
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 28, "two"],
+            [28, 50, "three"],
+            [50, 70, "four"],
+            [70, 100, "five"]
+          ]
+          upper: [100, "six"]
+      - id: vgr1_i1_pos_switch
+        type: switch
+      - id: vgr1_i2_pos_switch
+        type: switch
+      - id: vgr1_i3_pos_switch
+        type: switch
+      - id: vgr1_i4_light_barrier
+        type: switch
+      - id: vgr1_i7_light_barrier
+      - id: vgr1_i8_color_sensor
+      - id: vgr1_m1_speed
+        preset: fiveonetwopreset
+      - id: vgr1_m2_speed
+        preset: fiveonetwopreset
+      - id: vgr1_m3_speed
+        preset: fiveonetwopreset
+      - id: vgr1_o7_compressor
+        preset: fiveonetwopreset
+      - id: vgr1_o8_valve
+      - id: vgr1_target_pos_x
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 15, "two"],
+            [15, 100, "three"],
+            [100, 180, "four"]
+          ]
+          upper: [180, "five"]
+      - id: vgr1_target_pos_y
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 5, "two"],
+            [5, 20, "three"],
+            [20, 100, "four"]
+          ]
+          upper: [100, "five"]
+      - id: vgr1_target_pos_z
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 10, "two"],
+            [10, 20, "three"],
+            [20, 50, "four"],
+            [50, 80, "five"]
+          ]
+          upper: [80, "six"]
+  - id: OV_1
+    name: OV 1
+    source: OV_1Stream
+    sensors:
+      - id: ov1_i1_pos_switch
+        type: switch
+      - id: ov1_i2_pos_switch
+        type: switch
+      - id: ov1_i5_light_barrier
+      - id: ov1_m1_speed
+        preset: fiveonetwopreset
+      - id: ov1_o7_valve
+        preset: fiveonetwopreset
+      - id: ov1_o8_compressor
+        preset: fiveonetwopreset
+  - id: HBW_1
+    name: HBW 1
+    source: HBW_1Stream
+    sensors:
+      - id: hbw1_current_pos_x
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 5, "two"],
+            [5, 150, "three"],
+            [150, 250, "four"]
+          ]
+          upper: [250, "five"]
+      - id: hbw1_current_pos_y
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 30, "two"],
+            [30, 70, "three"],
+            [70, 100, "four"]
+          ]
+          upper: [100, "five"]
+      - id: hbw1_target_pos_x
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 10, "two"],
+            [10, 150, "three"],
+            [150, 250, "four"]
+          ]
+          upper: [250, "five"]
+      - id: hbw1_target_pos_y
+        discretization: 
+          lower: [0, "one"]
+          intermediate: [
+            [0, 30, "two"],
+            [30, 70, "three"],
+            [70, 100, "four"]
+          ]
+          upper: [100, "five"]
+      - id: hbw1_i5_pos_switch
+        type: switch
+      - id: hbw1_m1_speed
+        preset: fiveonetwopreset
+      - id: hbw1_m2_speed
+        preset: fiveonetwopreset
+      - id: hbw1_m3_speed
+        preset: fiveonetwopreset
+      - id: hbw1_m4_speed
+        preset: fiveonetwopreset
+      - id: hbw1_i6_pos_switch
+        type: switch
+      - id: hbw1_i8_pos_switch
+        type: switch
+      - id: hbw1_i7_pos_switch
+        type: switch
+      - id: hbw1_i1_light_barrier
+        type: switch
+      - id: hbw1_i2_light_barrier
+        type: switch
+      - id: hbw1_i3_light_barrier
+        type: switch
+      - id: hbw1_i4_light_barrier
+        type: switch
+  - id: SM_1
+    name: SM 1
+    source: SM_1Stream
+    sensors:
+      - id: sm1_i1_light_barrier
+      - id: sm1_i2_color_sensor
+        discretization:
+          lower: [1725, "low"]
+          intermediate: [
+            [1725, 1790, "medium"]
+          ]
+          upper: [1790, "high"]
+      - id: sm1_i3_light_barrier
+        type: switch
+      - id: sm1_i6_light_barrier
+        type: switch
+      - id: sm1_i7_light_barrier
+        type: switch
+      - id: sm1_i8_light_barrier
+        type: switch
+      - id: sm1_m1_speed
+        preset: fiveonetwopreset
+      - id: sm1_o5_valve
+      - id: sm1_o6_valve
+      - id: sm1_o7_valve
+      - id: sm1_o8_compressor
+  - id: WT_1
+    name: WT 1
+    source: WT_1Stream
+    sensors:
+      - id: wt1_i3_pos_switch
+        type: switch
+      - id: wt1_i4_pos_switch
+      - id: wt1_m2_speed
+        preset: fiveonetwopreset
+      - id: wt1_o5_valve
+        preset: fiveonetwopreset
+      - id: wt1_o6_valve
+        preset: fiveonetwopreset
+      - id: wt1_o8_compressor
+        preset: fiveonetwopreset
+  - id: MM_1
+    name: MM 1
+    source: MM_1Stream
+    sensors:
+      - id: mm1_i1_pos_switch
+        type: switch
+      - id: mm1_i2_pos_switch
+        type: switch
+      - id: mm1_i3_pos_switch
+        type: switch
+      - id: mm1_i4_light_barrier
+        type: switch
+      - id: mm1_m1_speed
+        preset: fiveonetwopreset
+      - id: mm1_m2_speed
+        preset: fiveonetwopreset
+      - id: mm1_m3_speed
+        preset: fiveonetwopreset
+      - id: mm1_o7_valve
+        preset: fiveonetwopreset
+      - id: mm1_o8_compressor
+        preset: fiveonetwopreset
+      

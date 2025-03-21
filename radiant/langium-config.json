@@ -1,0 +1,15 @@
+{
+    "projectName": "Radiant",
+    "languages": [{
+        "id": "radiant",
+        "grammar": "src/language/radiant.langium",
+        "fileExtensions": [".rad"],
+        "textMate": {
+            "out": "syntaxes/radiant.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "src/syntaxes/radiant.monarch.ts"
+        }
+    }],
+    "out": "src/language/generated"
+}

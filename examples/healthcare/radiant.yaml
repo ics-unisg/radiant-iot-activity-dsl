@@ -1,0 +1,122 @@
+generator:
+  type: siddhi
+  patterns_sink:
+    type: mqtt
+    url: ${MQTT_URL}
+    topic: Radiant/Patterns
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+
+sources:
+  - id: HYGIENE_STATIONStream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.HYGIENE_STATION
+    topic: BDLab/HYGIENE_STATION
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      SeG_ir_long_distance: float
+      s22Pa_nfc_tag: int
+      s23UU_button_state: int
+      s23xq_load_cell_weight: int
+  - id: LEFT_DONATIONStream
+    type: mqtt
+    url: ${MQTT_URL}
+    client_id: mqtt.LEFT_DONATION
+    topic: BDLab/LEFT_DONATION
+    username: ${MQTT_USER}
+    password: ${MQTT_PASSWORD}
+    content_type: json
+    schema:
+      timestamp: string
+      Sj7_motion_status: int
+      TGJ_ir_short_distance: float
+      s22P4_nfc_tag: int
+      s23V3_button_state: int
+      s25JW_ambient_light_illuminance: float
+      VDY_accel_x: int
+      VDY_accel_y: int
+      VDY_accel_z: int
+
+presets:
+  - id: onetwoswitch
+    min_value: 1
+    max_value: 2
+    states:
+      off: 1
+      on: 2
+
+sink:
+  type: mqtt
+  url: ${MQTT_URL}
+  base_topic: RadiantBase
+  username: ${MQTT_USER}
+  password: ${MQTT_PASSWORD}
+  content_type: json-xes
+
+stations:
+  - id: HYGIENE_STATION
+    name: Hygiene Station
+    source: HYGIENE_STATIONStream
+    sensors:
+      - id: SeG_ir_long_distance
+        discretization:
+          lower: [45, "low"]
+          intermediate: [
+            [45, 120, "medium"]
+          ]
+          upper: [120, "high"]
+      - id: s22Pa_nfc_tag
+        preset: onetwoswitch
+      - id: s23UU_button_state
+        type: switch
+      - id: s23xq_load_cell_weight
+        discretization:
+          lower: [300, "not_pressed"]
+          upper: [300, "pressed"]
+  - id: LEFT_DONATION
+    name: Left Donation
+    source: LEFT_DONATIONStream
+    sensors:
+      - id: Sj7_motion_status
+        type: switch
+      - id: TGJ_ir_short_distance
+        discretization:
+          lower: [9, "low"]
+          upper: [9, "high"]
+      - id: s22P4_nfc_tag
+        type: switch
+      - id: s23V3_button_state
+        type: switch
+      - id: s25JW_ambient_light_illuminance
+        discretization:
+          lower: [65, "low"]
+          intermediate: [
+            [65, 200, "medium"]
+          ]
+          upper: [200, "high"]
+      - id: VDY_accel_x
+        discretization:
+          lower: [6600, "baseline"]
+          intermediate: [
+            [6600, 7600, "direction1"]
+          ]
+          upper: [7600, "direction2"]
+      - id: VDY_accel_y
+        discretization:
+          lower: [-250, "baseline"]
+          intermediate: [
+            [-250, 100, "direction1"]
+          ]
+          upper: [100, "direction2"]
+      - id: VDY_accel_z
+        discretization:
+          lower: [-7500, "baseline"]
+          intermediate: [
+            [-7500, -5500, "direction1"]
+          ]
+          upper: [-5500, "direction2"]

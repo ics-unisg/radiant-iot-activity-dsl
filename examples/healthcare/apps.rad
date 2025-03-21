@@ -1,0 +1,224 @@
+Process BloodDonation:
+    Activity Donor_check_in:
+        Start:
+            In LEFT_DONATION sensor s22P4_nfc_tag changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from high to low;
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from high to low;
+        End:
+            In LEFT_DONATION sensor s22P4_nfc_tag changes_from on to off;
+    Activity HCW_check_in:
+        Start:
+            In HYGIENE_STATION sensor SeG_ir_long_distance is_changing;
+        Intermediate:
+            In HYGIENE_STATION sensor s22Pa_nfc_tag changes_from off to on;
+        End:
+            In HYGIENE_STATION sensor s22Pa_nfc_tag changes_from on to off;
+    Activity Check_blood_drawing_machine:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        End:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+    Activity Apply_tourniquet:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from low to high;
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from low to medium;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from high to low;
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from medium to low;
+        End:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from on to off;
+    Activity Hand_hygiene:
+        Start:
+            In HYGIENE_STATION sensor s23xq_load_cell_weight changes_from not_pressed to pressed;
+        Intermediate:
+            In HYGIENE_STATION sensor s23xq_load_cell_weight changes_from pressed to not_pressed;
+        Intermediate:
+            In HYGIENE_STATION sensor SeG_ir_long_distance is_changing;
+        End:
+            In HYGIENE_STATION sensor SeG_ir_long_distance is_changing;
+    Activity Insert_needle:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance is_changing;
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance is_changing;
+        End:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from on to off;
+    Activity Remove_tourniquet:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from low to high;
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from low to medium;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from high to low;
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from medium to low;
+        End:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from on to off;
+    Activity Start_blood_drawing_machine:
+        Start:
+            In LEFT_DONATION sensor s23V3_button_state changes_from off to on;
+        End:
+            In LEFT_DONATION sensor s23V3_button_state changes_from on to off;
+    Activity Monitor_patient:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from on to off;
+        End:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from on to off;
+    Activity Stop_blood_drawing_machine:
+        Start:
+            In LEFT_DONATION sensor s23V3_button_state changes_from off to on;
+        End:
+            In LEFT_DONATION sensor s23V3_button_state changes_from on to off;
+    Activity Donor_check_out:
+        Start:
+            Case:
+                In LEFT_DONATION sensor s25JW_ambient_light_illuminance changes_from high to low;
+            Case:
+                In LEFT_DONATION sensor TGJ_ir_short_distance changes_from high to low;
+        Intermediate:
+            In LEFT_DONATION sensor s22P4_nfc_tag changes_from off to on;
+        End:
+            In LEFT_DONATION sensor s22P4_nfc_tag changes_from on to off;
+    Activity Take_out_samples:
+        Start:
+            In LEFT_DONATION sensor Sj7_motion_status changes_from off to on;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        Intermediate:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+        End:
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_z is_changing;
+            Case:
+                In LEFT_DONATION sensor VDY_accel_x is_changing;
+                In LEFT_DONATION sensor VDY_accel_y is_changing;
+    Activity HCW_check_out:
+        Start:
+            In HYGIENE_STATION sensor s22Pa_nfc_tag changes_from off to on;
+        Intermediate:
+            In HYGIENE_STATION sensor s22Pa_nfc_tag changes_from on to off;
+        End:
+            Case:
+                In HYGIENE_STATION sensor SeG_ir_long_distance changes_from low to medium;
+            Case:
+                In HYGIENE_STATION sensor SeG_ir_long_distance changes_from low to high;
+            Case:
+                In HYGIENE_STATION sensor SeG_ir_long_distance changes_from high to low;

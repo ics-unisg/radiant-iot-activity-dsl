@@ -1,0 +1,137 @@
+{
+  "name": "radiant",
+  "description": "A DSL for activity detection in IoT",
+  "version": "1.0.1",
+  "repository": "https://anon.com",
+  "publisher": "anon",
+  "contributors": [
+    {
+      "name": "anon",
+      "email": "anon@anon.com"
+    }
+  ],
+  "icon": "radiant_icon.png",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b tsconfig.src.json && node esbuild.mjs",
+    "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.src.json --watch\" \"node esbuild.mjs --watch\"",
+    "lint": "eslint src",
+    "langium:generate": "langium generate",
+    "langium:watch": "langium generate --watch",
+    "vscode:prepublish": "npm run build && npm run lint",
+    "build:web": "npm run build",
+    "bundle": "vite build",
+    "bundle:serve": "http-server ./dist --port 5175",
+    "dev": "vite",
+    "dev:debug": "vite --debug --force",
+    "serve": "npm run dev",
+    "test": "vitest run",
+    "setup": "npm install && npm run langium:generate && npm run build && npm link"
+  },
+  "dependencies": {
+    "@codingame/monaco-vscode-editor-service-override": "~3.2.3",
+    "@codingame/monaco-vscode-keybindings-service-override": "~3.2.3",
+    "@std/collections": "npm:@jsr/std__collections@^1.0.9",
+    "@std/yaml": "npm:@jsr/std__yaml@^1.0.5",
+    "commander": "~13.0.0",
+    "langium": "~3.3.0",
+    "monaco-editor": "npm:@codingame/monaco-vscode-editor-api@~3.2.3",
+    "monaco-editor-wrapper": "~4.0.2",
+    "monaco-languageclient": "~8.1.1",
+    "vscode-languageclient": "~9.0.1",
+    "vscode-languageserver": "~9.0.1",
+    "yoctocolors": "^2.1.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
+    "@types/node": "22.10.5",
+    "@types/vscode": "~1.67.0",
+    "@typescript-eslint/eslint-plugin": "~8.19.0",
+    "@typescript-eslint/parser": "~8.19.0",
+    "concurrently": "~9.1.2",
+    "esbuild": "^0.24.2",
+    "eslint": "~9.17.0",
+    "http-server": "~14.1.1",
+    "langium-cli": "~3.3.0",
+    "typescript": "~5.7.2",
+    "vite": "~6.0.7",
+    "vitest": "~2.1.8",
+    "vscode": "npm:@codingame/monaco-vscode-api@~3.2.3",
+    "zod-to-json-schema": "^3.24.1"
+  },
+  "volta": {
+    "node": "18.19.1",
+    "npm": "10.2.4"
+  },
+  "displayName": "Radiant",
+  "engines": {
+    "vscode": "^1.67.0",
+    "node": ">=18.0.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "radiant",
+        "aliases": [
+          "Radiant",
+          "radiant"
+        ],
+        "extensions": [
+          ".rad"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "radiant",
+        "scopeName": "source.radiant",
+        "path": "syntaxes/radiant.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Radiant",
+      "properties": {
+        "radiant.generateOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate output files on file save."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "radiant.generate",
+        "title": "Radiant: Generate"
+      },
+      {
+        "command": "radiant.deploy",
+        "title": "Radiant: Deploy"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "radiant.generate",
+          "when": "editorLangId == radiant"
+        },
+        {
+          "command": "radiant.deploy",
+          "when": "editorLangId == radiant"
+        }
+      ]
+    }
+  },
+  "activationEvents": [
+    "onLanguage:radiant"
+  ],
+  "main": "./out/extension/main.cjs",
+  "bin": {
+    "rad": "./bin/cli.js",
+    "radls": "./bin/ls.js"
+  }
+}
