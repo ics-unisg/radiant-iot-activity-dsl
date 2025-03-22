@@ -1,5 +1,5 @@
 # Radiant
-Radiant is a Domain Specific Language [DSL] for monitoring and activity detection, especially in an CPS environment. This extension provides the complete set of tooling around the DSL including LSP, code generation and direct deployment to a Siddhi runner.
+Radiant is a Domain Specific Language [DSL] for monitoring and activity detection, especially in a CPS environment. This extension provides the complete set of tooling around the DSL including LSP, code generation and direct deployment to a Siddhi runner.
 
 ## Commands
 
