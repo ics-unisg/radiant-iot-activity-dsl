@@ -19,8 +19,8 @@ Press `F5` to open a new window with your extension loaded.
 ### 2. Write Radiant & Generate Siddhi
 Open one of the folders from the `examples` folder (`examples/healthcare` or `examples/factory`) with the VSCode window that has the extension loaded. Press `Ctrl-S` with the `.rad` file open. The generated Siddhi apps will appear in the `out` subfolder. You can modify the `.rad` or `.yaml` file, the Siddhi apps are regenerated on each save. For information on language features, please refer to the paper.
 
-### 4. Deploy
+### 3. Deploy
 The Siddhi apps can then be deployed with Siddhi. For testing we used the local Siddhi runner, version 5.1.
 
-### 5. Detect
+### 4. Detect
 Produce real or simulated events on the incoming source streams and view the outoing sink for detected activities (e.g. using [MQTT Explorer](https://mqtt-explorer.com/)).
