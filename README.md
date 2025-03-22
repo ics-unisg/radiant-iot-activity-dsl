@@ -23,4 +23,4 @@ Open one of the folders from the `examples` folder (`examples/healthcare` or `ex
 The Siddhi apps can then be deployed with Siddhi. For testing we used the local Siddhi runner, version 5.1.
 
 ### 4. Detect
-Produce real or simulated events on the incoming source streams and view the outoing sink for detected activities (e.g. using [MQTT Explorer](https://mqtt-explorer.com/)).
+Produce real or simulated events on the incoming source streams and view the outgoing sink for detected activities (e.g. using [MQTT Explorer](https://mqtt-explorer.com/)).
