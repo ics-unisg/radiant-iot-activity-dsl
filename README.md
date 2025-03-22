@@ -1,3 +1,5 @@
+<img src="radiant_logo.svg" width="200" />
+
 
 ## Getting Started
 Follow the steps below to get started writing and deploying Radiant. Note that the published VSCode extension and NeoVim integration are not available in this anonymized repository during peer-review.
