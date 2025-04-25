@@ -7,8 +7,8 @@ import { Config } from '../../config/schema.js';
 import { emptyLineNode, getRelevantStationNames } from './util.js';
 import { generateApp } from './app.js';
 import { generateSource, generateDiscretizedSource, generateSourceToDiscMapper } from './source.js';
-import { generateLogSink, generateMqttSink, generatePatternSink } from './sink.js';
-import { generateActivityPattern, generateDetectActivityPattern } from './pattern.js';
+import { generateMqttSink, generatePatternSinkLog } from './sink.js';
+import { generateActivityPattern, generateDetectActivityPattern, generateHighQuery } from './pattern.js';
 import { RadiantOptions } from '../../config/options.js';
 import { Artifact, DiskArtifact, MemoryArtifact } from '../artifact.js';
 
@@ -53,27 +53,15 @@ export class SiddhiGenerator implements Generator {
           separator: emptyLineNode
         }),
         
+        generatePatternSinkLog(
+          this.config.generator.patterns_sink,
+          "Low"
+        ),
 
-        // if an optional patterns sink is defined the
-        // detected intermediate pattern events are
-        // published to this sink as well as being logged
-        (this.config.generator.patterns_sink !== undefined)
-          ?
-          generatePatternSink(
-            this.config.generator.patterns_sink,
-            "DetectedPatterns", [
-              ["event", "string"],
-              ["activity", "string"],
-              ["ts", "string"]
-            ]
-          ) : generateLogSink(
-              "Pattern Log",
-              "DetectedPatterns", [
-              ["event", "string"],
-              ["activity", "string"],
-              ["ts", "string"]
-            ]),
-        ,
+        generatePatternSinkLog(
+          this.config.generator.patterns_sink,
+          "High"
+        ),
 
         // The main sink containing the detected activities
         // that is being published to the defined sink
@@ -92,14 +80,19 @@ export class SiddhiGenerator implements Generator {
           separator: emptyLineNode
         }),
 
-        generateActivityPattern(activity.startPattern, "StartPattern", activity.name, this.config),
+        generateActivityPattern(activity.startPattern, "StartPattern", activity.name, this.config, 1),
+        generateHighQuery(1),
 
-        joinToNode(activity.intermediates, (intermediate, i) =>
-          generateActivityPattern(intermediate, "IntermediatePattern" + (i + 1), activity.name, this.config), {
-          separator: emptyLineNode,
-        }),
+        joinToNode(
+          activity.intermediates.flatMap((intermediate, i) => [
+            generateActivityPattern(intermediate, "IntermediatePattern" + (i + 1), activity.name, this.config, i + 2),
+            generateHighQuery(i + 2)
+          ]),
+          { separator: emptyLineNode }
+        ),
 
-        generateActivityPattern(activity.endPattern, "EndPattern", activity.name, this.config),
+        generateActivityPattern(activity.endPattern, "EndPattern", activity.name, this.config, activity.intermediates.length + 2),
+        generateHighQuery(activity.intermediates.length + 2),
 
         generateDetectActivityPattern(activity.name, activity.intermediates.length)
       ]

@@ -1,11 +1,6 @@
 import { expandToNode, joinToNode } from "langium/generate";
 import { MqttSink, PatternSink } from "../../config/schema.js";
 
-export function generateLogSink(prefix: string, sinkId: string, schema: [string, string][]) {
-  return expandToNode`@sink(type = 'log', prefix='${prefix}', priority='${(prefix === 'Selected Pattern Log') ? 'INFO' : 'DEBUG'}')
-define Stream ${sinkId}(${schema.map(([name, type]) => `${name} ${type}`).join(', ')});`.appendNewLineIfNotEmpty()
-}
-
 export function generateMqttSink(sink: MqttSink, sinkId: string, schema: [string, string][], activityName: string) {
   const annotation = generateMqttSinkAnnotation(sink, activityName)
   const streamDefinition = expandToNode`define Stream ${sinkId}(${schema.map(([name, type]) => `${name} ${type}`).join(', ')});`
@@ -99,22 +94,36 @@ function generateMqttSinkAnnotation(sink: MqttSink, activityName: string) {
   }
 }
 
-export function generatePatternSink(sink: PatternSink, sinkId: string, schema: [string, string][]) {
-  const annotation = generatePatternSinkAnnotation(sink)
-  const streamDefinition = expandToNode`define Stream ${sinkId}(${schema.map(([name, type]) => `${name} ${type}`).join(', ')});`
+export function generatePatternSinkLog(sink: (PatternSink | undefined), level: "Low" | "High") {
+  const streamName = "DetectedPatterns" + level
+  const schema = [
+    ["event", "string"],
+    ["activity", "string"],
+    ["ts", "string"],
+    ["num", "int"]
+  ]
+  const streamDefinition = expandToNode`define Stream ${streamName}(${schema.map(([name, type]) => `${name} ${type}`).join(', ')});`
 
-  return joinToNode([
-    expandToNode`@sink(type = 'log', prefix='${sinkId}-Log', priority='INFO')`.appendNewLine(),
-    annotation,
-    streamDefinition
-  ])
+  if (sink !== undefined) {
+    let annotation = generatePatternSinkAnnotation(sink, level)
+    return joinToNode([
+      expandToNode`@sink(type = 'log', prefix='${streamName}-Log', priority='INFO')`.appendNewLine(),
+      annotation,
+      streamDefinition
+    ])
+  } else {
+    return joinToNode([
+      expandToNode`@sink(type = 'log', prefix='${streamName}-Log', priority='INFO')`.appendNewLine(),
+      streamDefinition
+    ])
+  }
 }
 
-function generatePatternSinkAnnotation(sink: PatternSink) {
+function generatePatternSinkAnnotation(sink: PatternSink, level: "Low" | "High") {
   let properties: string[] = [
     `type = '${sink.type}'`,
     `url = '${sink.url}'`,
-    `topic = '${sink.topic}'`,
+    `topic = '${sink.topic}/${level}'`,
   ]
 
   if (sink.username !== undefined) {
