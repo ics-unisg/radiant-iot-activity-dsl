@@ -23,9 +23,9 @@ export function generateHighQuery(curr_num: number) {
   const nameNode = expandToNode`@info(name="HighQuery-${curr_num}")`;
   let fromNode;
   if (curr_num == 1) {
-    fromNode = expandToNode`from l = DetectedPatternsLow[num == ${curr_num}]`;
+    fromNode = expandToNode`from every l = DetectedPatternsLow[num == ${curr_num}]`;
   } else {
-    fromNode = expandToNode`from insert into DetectedPatternsHigh[num = ${curr_num-1}] -> l = DetectedPatternsLow[num == ${curr_num}]`;
+    fromNode = expandToNode`from every DetectedPatternsHigh[num == ${curr_num-1}] -> l = DetectedPatternsLow[num == ${curr_num}]`;
   }
   const eventNode = expandToNode`select l.event as event, l.activity as activity, l.ts as ts, l.num as num`;
   const insertNode = expandToNode`insert into DetectedPatternsHigh;`;
