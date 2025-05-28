@@ -2,7 +2,7 @@ import { expandToNode, joinToNode } from "langium/generate";
 import { Condition, Pattern } from "../../language/generated/ast.js";
 import { Config } from "../../config/schema.js";
 
-export function generateActivityPattern(pattern: Pattern, patternName: String, activityName: String, config: Config) {
+export function generateActivityPattern(pattern: Pattern, patternName: String, activityName: String, config: Config, num: number) {
   const nameNode = expandToNode`@info(name="${patternName}")`;
   let patternNode;
   if (containsChangePattern(pattern)) {
@@ -11,10 +11,27 @@ export function generateActivityPattern(pattern: Pattern, patternName: String, a
     patternNode = generateSimplePattern(pattern, config);
   }
   const timestamp = containsChangePattern(pattern) ? "e1.timestamp" : "timestamp";
-  const eventNode = expandToNode`select "${patternName}" as event, "${activityName}" as activity, ${timestamp} as ts`;
-  const insertNode = expandToNode`insert into DetectedPatterns;`;
+  const eventNode = expandToNode`select "${patternName}" as event, "${activityName}" as activity, ${timestamp} as ts, ${num} as num`;
+  const insertNode = expandToNode`insert into DetectedPatternsLow;`;
 
   return joinToNode([nameNode, patternNode, eventNode, insertNode], {
+    appendNewLineIfNotEmpty: true
+  });
+}
+
+export function generateHighQuery(curr_num: number) {
+  const nameNode = expandToNode`@info(name="HighQuery-${curr_num}")`;
+  let fromNode;
+  if (curr_num == 1) {
+    fromNode = expandToNode`from l = DetectedPatternsLow[num == ${curr_num}]`;
+  } else {
+    fromNode = expandToNode`from insert into DetectedPatternsHigh[num = ${curr_num-1}] -> l = DetectedPatternsLow[num == ${curr_num}]`;
+  }
+  const eventNode = expandToNode`select l.event as event, l.activity as activity, l.ts as ts, l.num as num`;
+  const insertNode = expandToNode`insert into DetectedPatternsHigh;`;
+
+
+  return joinToNode([nameNode, fromNode, eventNode, insertNode], {
     appendNewLineIfNotEmpty: true
   });
 }
@@ -76,11 +93,11 @@ function generateCondition(condition: Condition): string {
 
 export function generateDetectActivityPattern(activity_name: string, num_intermediates: number) {
   const nameNode = expandToNode`@info(name="Detect-Activity")`;
-  let fromNode = 'from every e1 = DetectedPatterns[event == "StartPattern"]'
+  let fromNode = 'from every e1 = DetectedPatternsLow[event == "StartPattern"]'
   for (let i = 1; i <= num_intermediates; i++) {
-    fromNode += ` -> not DetectedPatterns[event == "StartPattern"] and e${i + 1} = DetectedPatterns[event == "IntermediatePattern${i}" and time:timestampInMilliseconds(ts, 'yyyy-MM-dd HH:mm:ss.SS') >= time:timestampInMilliseconds(e${i}.ts, 'yyyy-MM-dd HH:mm:ss.SS')]`
+    fromNode += ` -> not DetectedPatternsLow[event == "StartPattern"] and e${i + 1} = DetectedPatternsLow[event == "IntermediatePattern${i}" and time:timestampInMilliseconds(ts, 'yyyy-MM-dd HH:mm:ss.SS') >= time:timestampInMilliseconds(e${i}.ts, 'yyyy-MM-dd HH:mm:ss.SS')]`
   }
-  fromNode += ` -> not DetectedPatterns[event == "StartPattern"] and e${num_intermediates + 2} = DetectedPatterns[event == "EndPattern" and time:timestampInMilliseconds(ts, 'yyyy-MM-dd HH:mm:ss.SS') >= time:timestampInMilliseconds(e${num_intermediates + 1}.ts, 'yyyy-MM-dd HH:mm:ss.SS')]`;
+  fromNode += ` -> not DetectedPatternsLow[event == "StartPattern"] and e${num_intermediates + 2} = DetectedPatternsLow[event == "EndPattern" and time:timestampInMilliseconds(ts, 'yyyy-MM-dd HH:mm:ss.SS') >= time:timestampInMilliseconds(e${num_intermediates + 1}.ts, 'yyyy-MM-dd HH:mm:ss.SS')]`;
   const selectNode = expandToNode`select "${activity_name}" as activity, e1.ts as ts_start, e${num_intermediates + 2}.ts as ts_end`;
   const insertNode = expandToNode`insert into DetectedActivities;`;
 
